@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskMaster Pro & Focus Timer</title>
+    <meta name="description" content="Unified productivity dashboard with glassmorphic design, tasks, and Pomodoro focus timer.">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Animated Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <i class='bx bx-check-double'></i>
+                    </div>
+                    <h2>Productive</h2>
+                </div>
+            </div>
+
+            <nav class="folders">
+                <h3 class="nav-section-title">Tasks</h3>
+                <ul id="folder-list">
+                    <li class="folder-item active" data-view="tasks" data-folder="All">
+                        <div class="item-content">
+                            <i class='bx bx-layer'></i>
+                            <span>All Tasks</span>
+                        </div>
+                        <span class="count" id="count-All">0</span>
+                    </li>
+                    <li class="folder-item" data-view="tasks" data-folder="Work">
+                        <div class="item-content">
+                            <i class='bx bx-briefcase'></i>
+                            <span>Work</span>
+                        </div>
+                        <span class="count" id="count-Work">0</span>
+                    </li>
+                    <li class="folder-item" data-view="tasks" data-folder="Study">
+                        <div class="item-content">
+                            <i class='bx bx-book-open'></i>
+                            <span>Study</span>
+                        </div>
+                        <span class="count" id="count-Study">0</span>
+                    </li>
+                    <li class="folder-item" data-view="tasks" data-folder="Personal">
+                        <div class="item-content">
+                            <i class='bx bx-user'></i>
+                            <span>Personal</span>
+                        </div>
+                        <span class="count" id="count-Personal">0</span>
+                    </li>
+                </ul>
+
+                <h3 class="nav-section-title" style="margin-top: 24px;">Focus</h3>
+                <ul>
+                    <li class="folder-item" data-view="focus">
+                        <div class="item-content">
+                            <i class='bx bx-timer'></i>
+                            <span>Focus Timer</span>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar"><i class='bx bx-user-circle'></i></div>
+                    <div class="user-info">
+                        <p class="name">My Workspace</p>
+                        <p class="status">Stay focused</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- 1. Tasks View Dashboard -->
+            <div id="tasks-dashboard" class="view-panel">
+                <header class="main-header glass-panel">
+                    <div class="header-title">
+                        <h1 id="folder-title">All Tasks</h1>
+                        <p id="date-display"></p>
+                    </div>
+
+                    <div class="progress-widget">
+                        <div class="progress-info">
+                            <span class="progress-label">Today's Progress</span>
+                            <span class="progress-percentage" id="progress-text">0%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progress-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="actions-bar">
+                    <button id="open-modal-btn" class="primary-btn glow-effect">
+                        <i class='bx bx-plus'></i> Add New Task
+                    </button>
+                </div>
+
+                <div class="task-container">
+                    <ul id="task-list">
+                        <!-- Tasks injected by JS -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 2. Focus Timer View -->
+            <div id="focus-timer-dashboard" class="view-panel hidden">
+                <header class="main-header glass-panel">
+                    <div class="header-title">
+                        <h1>Focus Center</h1>
+                        <p>Calm space to concentrate</p>
+                    </div>
+                </header>
+
+                <div class="focus-container-wrapper">
+                    <div class="focus-timer-container glass-panel">
+                        <!-- Active Task Selector -->
+                        <div class="focus-task-widget">
+                            <label for="focus-task-select"><i class='bx bx-bullseye'></i> Working on:</label>
+                            <select id="focus-task-select" class="glass-select">
+                                <option value="">No active task (General Focus)</option>
+                                <!-- Dynamic active tasks -->
+                            </select>
+                        </div>
+
+                        <!-- Timer Modes -->
+                        <nav class="timer-modes" aria-label="Timer modes">
+                            <button class="timer-mode-btn active" data-mode="pomodoro" id="btn-pomodoro">Pomodoro</button>
+                            <button class="timer-mode-btn" data-mode="shortBreak" id="btn-short">Short Break</button>
+                            <button class="timer-mode-btn" data-mode="longBreak" id="btn-long">Long Break</button>
+                        </nav>
+
+                        <!-- Timer Display -->
+                        <div class="timer-display-wrap">
+                            <div class="timer-display" id="time-display" aria-live="polite">
+                                <span id="minutes">25</span><span class="colon">:</span><span id="seconds">00</span>
+                            </div>
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="timer-controls">
+                            <button id="start-btn" class="control-btn primary">Start</button>
+                            <button id="reset-btn" class="control-btn secondary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div id="task-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel">
+            <div class="modal-header">
+                <h2 id="modal-title">Create Task</h2>
+                <button id="close-modal-btn" class="icon-btn"><i class='bx bx-x'></i></button>
+            </div>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+
+                <div class="form-group">
+                    <label for="task-title">Task Name</label>
+                    <input type="text" id="task-title" placeholder="What do you need to do?" required
+                        autocomplete="off">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="task-category">Folder</label>
+                        <select id="task-category" required>
+                            <option value="Work">Work</option>
+                            <option value="Study">Study</option>
+                            <option value="Personal">Personal</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="task-priority">Priority</label>
+                        <select id="task-priority" required>
+                            <option value="High">High 🔴</option>
+                            <option value="Medium" selected>Medium 🟡</option>
+                            <option value="Low">Low 🟢</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="task-due-date">Remind me at (Optional)</label>
+                    <input type="datetime-local" id="task-due-date">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="cancel-btn" class="secondary-btn">Cancel</button>
+                    <button type="submit" class="primary-btn glow-effect">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Notification Sound -->
+    <audio id="notification-sound"
+        src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=success-1-6297.mp3"
+        preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
